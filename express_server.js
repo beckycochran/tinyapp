@@ -37,3 +37,19 @@ app.get("/set", (req, res) => {
  app.get("/fetch", (req, res) => {
   res.send(`a = ${a}`);
  });
+
+ app.get("/urls", (req, res) => {
+   const templateVars = { urls: urlDatabase };
+   res.render("urls_index", templateVars);
+ });
+
+//adding a route used to render this new template
+ app.get("/urls/:shortURL", (req, res) => {
+  const longURL = urlDatabase[req.params.shortURL];
+  console.log(longURL);
+  const templateVars = { 
+    shortURL: req.params.shortURL, 
+    longURL: longURL};
+  
+    res.render("urls_show", templateVars);
+});
