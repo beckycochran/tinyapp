@@ -49,7 +49,8 @@ app.get("/set", (req, res) => {
   console.log(longURL);
   const templateVars = { 
     shortURL: req.params.shortURL, 
-    longURL: longURL};
+    longURL: longURL
+  };
   
     res.render("urls_show", templateVars);
 });
