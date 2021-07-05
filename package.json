@@ -16,5 +16,8 @@
   "bugs": {
     "url": "https://github.com/beckyparkes/tinyapp/issues"
   },
-  "homepage": "https://github.com/beckyparkes/tinyapp#readme"
+  "homepage": "https://github.com/beckyparkes/tinyapp#readme",
+  "dependencies": {
+    "express": "^4.17.1"
+  }
 }
