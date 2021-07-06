@@ -67,15 +67,17 @@ app.post("/urls", (req, res) => {
   const shortUrl = generateRandomString();
   urlDatabase[shortUrl] = req.body.longURL;
   //recieve the user input and save to database object
-  res.redirect(`/urls/${shortUrl}`);
+  res.redirect(`/urls/:${shortUrl}`);
 });
-
 
 function generateRandomString() {
   return (Math.random().toString(36).slice(2)).slice(0,7);
 }
 
 app.get("/u/:shortURL", (req, res) => {
-  const longURL = "/u/:shortURL";
+  const shortURL = req.params.shortURL;
+  const longURL = urlDatabase[shortURL];
+  console.log(shortURL);
   res.redirect(longURL);
 });
+
