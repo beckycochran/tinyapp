@@ -14,17 +14,16 @@
         
       
       </div>
-
-
-          
-          <class="login">
-            <form method="POST" action="/login>">
+        <% if(username) {%>
+        <div class="name">You are logged in as <%= username %></div>
+        <%}%>
+          <div class="login">
+            <form method="POST" action="/login">
               <label for="login">login:</label>
               <input type="text" name="username"><br>
               <button type="submit">Submit</button>
-            </form></span>
-  
-
+            </form>
+          <div>
     </div>
   </nav>
 </header>

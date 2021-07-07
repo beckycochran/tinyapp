@@ -1,14 +1,18 @@
 const express = require("express");
+const cookieParser = require('cookie-parser');
 const app = express();
 const PORT = 8080; // default port 8080
 app.set("view engine", "ejs");
+const bodyParser = require("body-parser");
+app.use(bodyParser.urlencoded({extended: true}));
 
 const urlDatabase = {
   "b2xVn2": "http://www.lighthouselabs.ca",
   "9sm5xK": "http://www.google.com"
 };
 
-//app.get defines a route handler for Get requests to a given URL.
+app.use(cookieParser());
+
 
 //   "/" path
 // 
@@ -21,8 +25,6 @@ app.listen(PORT, () => {
   console.log(`Example app listening on port ${PORT}!`);
 });
 
-const bodyParser = require("body-parser");
-app.use(bodyParser.urlencoded({extended: true}));
 
 app.get("/urls.json", (req, res) => {
   res.json(urlDatabase);
@@ -42,11 +44,26 @@ app.get("/set", (req, res) => {
  });
 
  app.get("/urls/new", (req, res) => {
-  res.render("urls_new");
+  const username = req.cookies.username;
+  if (req.cookies.username !== 'undefined') {
+    console.log("cookie value", username);
+  }
+   const templateVars = { 
+     urls: urlDatabase,
+     username
+    };
+   res.render("urls_new", templateVars); 
 });
 
  app.get("/urls", (req, res) => {
-   const templateVars = { urls: urlDatabase };
+  const username = req.cookies.username;
+  if (req.cookies.username !== 'undefined') {
+    console.log("cookie value", username);
+  }
+   const templateVars = { 
+     urls: urlDatabase,
+     username
+    };
    res.render("urls_index", templateVars);
  });
 
@@ -54,20 +71,26 @@ app.get("/set", (req, res) => {
  app.get("/urls/:shortURL", (req, res) => {
   const longURL = urlDatabase[req.params.shortURL];
   console.log(longURL);
+  const username = req.cookies.username;
+  if (req.cookies.username !== 'undefined') {
+    console.log("cookie value", username);
+  }
+
   const templateVars = { 
     shortURL: req.params.shortURL, 
-    longURL: longURL
+    longURL: urlDatabase[req.params.shortURL],
+    username
   };
+  console.log(urlDatabase);
   res.render("urls_show", templateVars);
 });
 
 app.post("/urls", (req, res) => {
   console.log(req.body);  // Log the POST request body to the console
-  //res.send("Ok");         // Respond with 'Ok' (we will replace this)
   const shortUrl = generateRandomString();
   urlDatabase[shortUrl] = req.body.longURL;
   //recieve the user input and save to database object
-  res.redirect(`/urls/:${shortUrl}`);
+  res.redirect(`/urls/${shortUrl}`);
 });
 
 function generateRandomString() {
@@ -87,4 +110,26 @@ app.post("/urls/:shortURL/delete", (req, res) => {
   delete urlDatabase[shortURL]; 
   delete longURL; 
   res.redirect("/urls");
+})
+
+app.post("/urls/:id", (req, res) => {
+  console.log("this is req.body.newURL", req.body.newURL);
+  console.log("this is req.params.id", req.params.id);
+  urlDatabase[req.params.id] = req.body.newURL;
+  res.redirect("/urls");
+})
+
+
+app.get("/login", (req, res) => {
+  const login = req.body.username;
+  res.send(login);
+})
+
+app.post("/login", (req, res) => {
+  //console.log("this is the inputted username", req.body.username);
+  const username = req.body.username;
+  
+  res.cookie('username', username);
+  console.log("req.cookies", req.cookies)
+  res.redirect(`/urls`);
 })
