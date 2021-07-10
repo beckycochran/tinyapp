@@ -1,3 +1,6 @@
+
+
+
 <header>
   <nav class="navbar navbar-expand-md navbar-dark bg-success">
     <a class="navbar-brand" href="/urls">TinyApp</a>
@@ -12,18 +15,30 @@
         <a class="nav-item nav-link" href="/urls">My URLs</a>
         <a class="nav-item nav-link" href="/urls/new">Create New URL</a>
         
-      
-      </div>
-        <% if(username) {%>
-        <div class="name">You are logged in as <%= username %></div>
+        <% if(!user) {%>
+        <a class="nav-item nav-link" href="/register">Register</a>
         <%}%>
-          <div class="login">
-            <form method="POST" action="/login">
-              <label for="login">login:</label>
-              <input type="text" name="username"><br>
-              <button type="submit">Submit</button>
+      
+      <ul class= "nav justify-content end">  
+      <% if(user) {%>
+        <li class= "nav-item navbar-brand">
+          <div class="name" style= "text-align: right;"> &nbsp; &nbsp; &nbsp;You are logged in as <%= user.email %> &nbsp;&nbsp;
+          </div>
+        </li>
+        <li class= "nav-item">
+          <div class="logout">
+            <form method="POST" action="/logout">
+              <button style="border: none; font-size: 16px; background-color: green; color: white;" type="submit">Logout</button>
             </form>
-          <div>
-    </div>
+          </div>
+        </li>
+        <%}%>
+
+      <% if(!user) {%>
+        <li>
+          <a class="nav-item nav-link" href="/login">Login</a>
+        </li>
+      <%}%>
+      </ul>
   </nav>
 </header>

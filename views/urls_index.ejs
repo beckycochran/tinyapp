@@ -17,22 +17,30 @@
         <tr>
           <th scope="col">Short URL</th>
           <th scope="col">Long URL</th>
+          <th scope="col">Owner ID</th>
           <th scope="col">Edit</th>
           <th scope="col">Delete</th>
         </tr>
       </thead>
       <tbody>
-        <% for(let url in urls) { %>
-          <tr>
+        <% for(let shortURL in shortURLS) { %>
 
-            <td><%= url %></td>
-            <td><%= urls[url] %></td>
-            <td><button type='submit'><a href="/urls/<%= url %>">Edit</a></button></td>
+          <tr>
+          <% if(!user) {%>
+            <td>Urls cannot be shown unless you are logged in</td>
+          <% } else { %>
+
+            <td><%= shortURL %></td>
+            <td><%= shortURLS[shortURL].longURL %></td>
+            <td><%= shortURLS[shortURL].userID %></td>
+
+            <td><button type='submit'><a href="/urls/<%= shortURL %>">Edit</a></button></td>
             
-            <td><form method="POST" action="/urls/<%= url %>/delete">
+            <td><form method="POST" action="/urls/<%= shortURL %>/delete">
               <button type="submit">Delete</button></td>
               </form>
           </tr>
+          <% } %>
         <% } %>
       </tbody>
     </table>  

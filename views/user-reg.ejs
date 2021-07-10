@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+  <!-- Bootstrap CSS -->
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css" integrity="sha384-GJzZqFGwb1QTTN6wy59ffF1BuGJpLSa9DkKMp0DgiMDm4iYMj70gZWKYbI706tWS" crossorigin="anonymous">
+  <title>Registration Form</title>
+
+</head>
+
+  <body>
+
+  <%- include('partials/_header') %>
+
+  <main style="margin: 1em;">
+    <h3>Please enter your user information</h3>
+
+    <form class="form-inline" action="/register" method="POST">
+      <div class="form-group mb-2">
+  
+        <input type="email" class="form-control" name="email" placeholder="Enter your email address" style="width: 300px; margin: 1em"><br><br>
+        <input type="password" class="form-control" name="password" placeholder="Enter your password" style="width: 300px; margin: 1em"><br><br>
+        <button type="submit" class="btn btn-primary">Submit</button>
+  
+      </div>
+      </form>
+  
+    </body>
+  
+  </main>
