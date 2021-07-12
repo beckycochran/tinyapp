@@ -32,7 +32,12 @@
 
             <td><%= shortURL %></td>
             <td><%= shortURLS[shortURL].longURL %></td>
-            <td><%= shortURLS[shortURL].userID %></td>
+            <td><%= shortURLS[shortURL].userID %></tdet values in cookies is different.
+
+              To set the user_id key on a session, write:
+              
+              req.session.user_id = "some value";
+              >
 
             <td><button type='submit'><a href="/urls/<%= shortURL %>">Edit</a></button></td>
             
