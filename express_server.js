@@ -2,8 +2,11 @@
 
 const express = require("express");
 const { getUserByEmail, generateRandomString, urlsForUser } = require("./helpers");
-const cookieParser = require('cookie-parser');
 
+const cookieSession = require('cookie-session')
+const express = require('express')
+
+const app = express()
 
 const app = express();
 const PORT = 8080; // default port 8080
@@ -11,7 +14,14 @@ const PORT = 8080; // default port 8080
 app.set("view engine", "ejs");
 const bodyParser = require("body-parser");
 app.use(bodyParser.urlencoded({extended: true}));
-app.use(cookieParser());
+
+app.use(cookieSession({
+  name: 'session',
+  keys: [/* secret keys */],
+
+  // Cookie Options
+  maxAge: 24 * 60 * 60 * 1000 // 24 hours
+}))
 
 
 const urlDatabase = {
@@ -79,7 +89,7 @@ app.get("/set", (req, res) => {
 
 
  app.get("/urls", (req, res) => {
-  const id = req.cookies['userID'];
+  const id = req.session.userID;
   const user = users[id];
   const shortURLS = urlDatabase;
 
@@ -121,7 +131,7 @@ app.get("/set", (req, res) => {
 
 
  app.get("/urls/new", (req, res) => {
-  const id = req.cookies['userID'];
+  const id = req.session.userID;
   const user = users[id];
   // const shortURL = req.params.shortURL;
   // const longURL = urlDatabase[shortURL]['longURL'];
@@ -170,7 +180,7 @@ app.get("/u/:shortURL", (req, res) => {
 
 
 app.post("/urls/:shortURL/delete", (req, res) => {
-  const id = req.cookies['userID'];
+  const id = req.session.userID;
   const user = users[id];
   const shortURL = req.params.shortURL;
 
@@ -188,7 +198,7 @@ app.post("/urls/:shortURL/delete", (req, res) => {
 
 
 app.post("/urls/:shortURL", (req, res) => {
-  const id = req.cookies['userID'];
+  const id = req.session.userID;
   const user = users[id];
 
   const shortURL = req.params.shortURL;
@@ -214,7 +224,7 @@ app.post("/urls/:shortURL", (req, res) => {
 
 
 app.get("/login", (req, res) => {
-  const id = req.cookies['userID'];
+  const id = req.session.userID;
   const user = users[id];
   res.render("user-login", { user });
 })
@@ -248,7 +258,7 @@ app.post("/logout", (req, res) => {
 
 
 app.get("/register", (req, res) => {
-  const id = req.cookies['userID'];
+  const id = req.session.userID;
 
   const user = users[id];
   
@@ -277,8 +287,7 @@ app.post("/register", (req, res) => {
 //if statement, meets requirement, then make cookie
 //else redirect page
 
-
-  res.cookie('userID', id);
+  req.session.user_id;
   //req.session = 'userID';
 
   // console.log("my")
