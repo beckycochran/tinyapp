@@ -4,6 +4,7 @@ const express = require("express");
 const { getUserByEmail, generateRandomString, urlsForUser } = require("./helpers");
 const cookieParser = require('cookie-parser');
 
+
 const app = express();
 const PORT = 8080; // default port 8080
 
@@ -220,15 +221,19 @@ app.get("/login", (req, res) => {
 
 app.post("/login", (req, res) => {
   const email = req.body.email;
-  const password = req.body.password;
-  const user = getUserByEmail(email, users);
 
-  if (!user || password !== user.password) {
-    return res.status(403).send("Invalid Credentials. Please <a href= '/login'>try again</a>");
-  } else {
+  const bcrypt = require('bcrypt');
+  const password = req.body.password; // found in the req.params object
+  const hashedPassword = bcrypt.hashSync(password, 10);
+
+
+  if (bcrypt.compareSync(password, hashedPassword)) {
+    const user = getUserByEmail(email, users);
     res.cookie('userID', user.id);
-    return res.redirect(`/urls`)
-  }
+    return res.redirect(`/urls`);
+  }//returns true
+  return res.status(403).send("Invalid Credentials. Please <a href= '/login'>try again</a>"); 
+   // returns false
 })
 
 
@@ -254,7 +259,11 @@ app.get("/register", (req, res) => {
 app.post("/register", (req, res) => {
 
   const email = req.body.email;
-  const password = req.body.password;
+
+  const bcrypt = require('bcrypt');
+  const password = req.body.password; // found in the req.params object
+  const hashedPassword = bcrypt.hashSync(password, 10);
+
 
   if (!email || !password) {
     return res.status(400).send("Missing email or password. Please <a href= '/register'>try again</a>");
