@@ -1,13 +1,10 @@
 ////////////// DECLARATIONS/INITIALIZATIONS ////////////////////////
 
 const express = require("express");
+const bcrypt = require('bcrypt');
 const { getUserByEmail, generateRandomString, urlsForUser } = require("./helpers");
 
-const cookieSession = require('cookie-session')
-const express = require('express')
-
-const app = express()
-
+const cookieSession = require('cookie-session');
 const app = express();
 const PORT = 8080; // default port 8080
 
@@ -17,11 +14,12 @@ app.use(bodyParser.urlencoded({extended: true}));
 
 app.use(cookieSession({
   name: 'session',
-  keys: [/* secret keys */],
+  keys: [generateRandomString(6)],
 
   // Cookie Options
   maxAge: 24 * 60 * 60 * 1000 // 24 hours
 }))
+
 
 
 const urlDatabase = {
@@ -232,14 +230,13 @@ app.get("/login", (req, res) => {
 app.post("/login", (req, res) => {
   const email = req.body.email;
 
-  const bcrypt = require('bcrypt');
   const password = req.body.password; // found in the req.params object
   const hashedPassword = bcrypt.hashSync(password, 10);
 
 
   if (bcrypt.compareSync(password, hashedPassword)) {
     const user = getUserByEmail(email, users);
-    res.cookie('userID', user.id);
+    req.session.userID = user.id;
     return res.redirect(`/urls`);
   }//returns true
   return res.status(403).send("Invalid Credentials. Please <a href= '/login'>try again</a>"); 
@@ -270,7 +267,6 @@ app.post("/register", (req, res) => {
 
   const email = req.body.email;
 
-  const bcrypt = require('bcrypt');
   const password = req.body.password; // found in the req.params object
   const hashedPassword = bcrypt.hashSync(password, 10);
 
